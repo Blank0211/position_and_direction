@@ -12,7 +12,7 @@ WIDTH, HEIGHT = 900, 500
 WIN = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("direction_test")
 clock = pygame.time.Clock()
-FPS = 60
+FPS = 120
 
 # Sprites
 class Ball(pygame.sprite.Sprite):
@@ -62,7 +62,7 @@ def main():
                     ball_0.set_mouse()
 
         # Draw / update sprite
-        WIN.fill(green)
+        WIN.fill(black)
         ball_0.draw(WIN)
         ball_0.update()
 
