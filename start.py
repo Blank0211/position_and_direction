@@ -1,11 +1,9 @@
 import sys, pygame
 
 # Colours
-white = (255, 255, 255)
 black = (0, 0, 0)
 blue1 = pygame.Color("#197bd2")
-blue2 = pygame.Color("#0f5cbf")
-green = pygame.Color("#073127")
+red = pygame.Color("#f04c64")
 
 # General setup
 WIDTH, HEIGHT = 900, 500
@@ -15,7 +13,7 @@ clock = pygame.time.Clock()
 FPS = 120
 
 # Sprites
-class Ball(pygame.sprite.Sprite):
+class Ball():
     def __init__(self, pos, color, radius):
         self.pos = pygame.math.Vector2(pos)
         self.image = pygame.Surface((radius*2, radius*2))
@@ -40,13 +38,28 @@ class Ball(pygame.sprite.Sprite):
 
     def set_mouse(self):
         self.mouse_pos = pygame.math.Vector2(pygame.mouse.get_pos())
-        self.mouse_pos = self.mouse_pos - self.pos
+        self.mouse_pos -= self.pos
         self.distance = int(self.mouse_pos.magnitude()) // self.speed
         self.dir = self.mouse_pos.normalize()
-        #print(f"dir: {self.dir}\nmouse_pos: {self.mouse_pos}")
        
 
+class Target():
+    def __init__(self, color, radius):
+        self.image = pygame.Surface((radius*2, radius*2))
+        self.rect = self.image.get_rect(center=(WIDTH//2, HEIGHT//2))
+        pygame.draw.circle(self.image, color, (radius, radius), radius)
+        self.image.set_colorkey(black)
+
+    def draw(self, win):
+        win.blit(self.image, self.rect)
+
+    def set_rect(self):
+        pos = pygame.mouse.get_pos()
+        self.rect.center = pos
+
+
 ball_0 = Ball((WIDTH//2, HEIGHT//2), blue1, 20)
+ball_1 = Target(red, 5)
 
 # Game loop
 def main():
@@ -60,11 +73,14 @@ def main():
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if event.button == 1:
                     ball_0.set_mouse()
+                    ball_1.set_rect()
 
-        # Draw / update sprite
-        WIN.fill(black)
-        ball_0.draw(WIN)
+        # Update / Draw sprite
         ball_0.update()
+        WIN.fill(black)
+        ball_1.draw(WIN)
+        ball_0.draw(WIN)
+
 
         # Update display
         pygame.display.flip()
